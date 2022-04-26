@@ -1,0 +1,37 @@
+<script>
+    const SERVER = "http://localhost:8080";
+    const setFile = async () => {
+        var data = new FormData();
+        var FILE = new File(["Hello"], "filename");
+
+        data.append("file", FILE);
+
+        return fetch(`${SERVER}/setFile`, {
+            method: "POST",
+            body: data,
+        });
+    };
+    const getFile = async (uuid) => {
+        await fetch(`${SERVER}/getFile`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                name: uuid,
+            }),
+        });
+    };
+
+    const main = async () => {
+        let name;
+        try {
+            const data = await setFile();
+            name = (await data.json()).name;
+        } catch (e) {
+            name = "error";
+        }
+        await getFile(name);
+    };
+    main();
+</script>
